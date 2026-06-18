@@ -1,0 +1,31 @@
+name: Daily Game News
+
+on:
+  workflow_dispatch:   # 允许你手动点按钮运行
+  schedule:
+    - cron: "0 1 * * *"  # 每天运行（UTC时间，约等于新加坡上午9点）
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run script
+        env:
+          FEISHU_WEBHOOK: ${{ secrets.FEISHU_WEBHOOK }}
+          FEISHU_SECRET: ${{ secrets.FEISHU_SECRET }}
+          FEED_URLS: ${{ vars.FEED_URLS }}
+          KEYWORDS: ${{ vars.KEYWORDS }}
+          MAX_ITEMS: ${{ vars.MAX_ITEMS }}
+        run: python daily_game_news.py
