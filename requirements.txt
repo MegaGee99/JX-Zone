@@ -1,2 +1,4 @@
-feedparser
 requests
+feedparser
+beautifulsoup4
+openai
